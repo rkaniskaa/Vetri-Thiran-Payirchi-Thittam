@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGenie AI</title>
+</head>
+
+<body>
+    <h1>EduGenie AI</h1>
+    <p>Welcome to EduGenie!</p>
+
+    <h2>Learning Assistant</h2>
+
+    <input
+        type="text"
+        id="question"
+        placeholder="Ask your question..."
+    >
+
+    <button onclick="askQuestion()">Ask</button>
+
+    <div id="result"></div>
+
+    <script>
+        async function askQuestion() {
+            const question = document.getElementById("question").value;
+            const result = document.getElementById("result");
+
+            if (!question) {
+                result.innerText = "Please enter a question.";
+                return;
+            }
+
+            result.innerText = "Loading...";
+
+            try {
+                const response = await fetch("/qa", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        question: question
+                    })
+                });
+
+                const data = await response.json();
+
+                result.innerText = data.result || data.error || "No response";
+            } catch (error) {
+                result.innerText = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
